@@ -1,0 +1,50 @@
+package players.player2;
+
+import players.*;
+import board.*;
+import util.*;
+import java.util.*;
+import javafx.scene.paint.Color;
+
+public class Player2 implements Player {
+
+    private DBG dbg;
+    public Player2() {
+        dbg = new DBG(DBG.PLAYERS, "Player2");
+    }
+
+    public Line makePlay(Board board, Line oppPlay, long timeRemaining) {
+
+        Set<Line> lines = board.openLines();
+        Deque<Line> zero = new ArrayDeque<Line>();
+        Deque<Line> ones = new ArrayDeque<Line>();
+        Deque<Line> twos = new ArrayDeque<Line>();
+        Deque<Line> thre = new ArrayDeque<Line>();
+        for (Line line : lines){
+            int i = line.getRow();
+            int j = line.getCol();
+            Square x = board.getSquare(i, j);
+            int holder = 0;
+            if (x.sideIsMarked(Side.NORTH)) holder++;
+            if (x.sideIsMarked(Side.SOUTH)) holder++;
+            if (x.sideIsMarked(Side.EAST)) holder++;
+            if (x.sideIsMarked(Side.WEST)) holder++;
+            if (holder == 0) zero.offer(line);
+            else if (holder == 1) ones.offer(line);
+            else if (holder == 2) twos.offer(line);
+            else if (holder == 3) thre.offer(line);
+        }
+        if (!thre.isEmpty()) return thre.getFirst();
+        else if (!zero.isEmpty()) return zero.getFirst();
+        else if (!ones.isEmpty()) return ones.getFirst();
+        else return twos.getFirst();
+
+    }
+
+    public String teamName() { return "British Petroleum"; }
+    public Color getSquareColor()  { return Util.PLAYER2_COLOR; }
+    public Color getLineColor() { return Util.PLAYER2_LINE_COLOR; }
+    public String teamMembers() { return "Brian Kim & Emma Watson"; }
+    public int getId()       { return 2; }
+    public String toString() { return teamName(); }
+}
